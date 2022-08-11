@@ -1,0 +1,41 @@
+[
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=diziyou.co&sz=%size%",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/Amiqo09/Diziyou-Cloudstream",
+        "fileSize": 16286,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "yusiqo"
+        ],
+        "tvTypes": [
+            "TvSeries"
+        ],
+        "version": 9,
+        "internalName": "DiziYou",
+        "description": "DiziYou t\u00fcm yabanc\u0131 dizileri \u00fccretsiz olarak T\u00fcrk\u00e7e Dublaj ve altyaz\u0131l\u0131 se\u00e7enekleri ile 1080P kalite izleyebilece\u011finiz yeni nesil yabanc\u0131 dizi izleme siteniz.",
+        "url": "https://raw.githubusercontent.com/Amiqo09/Diziyou-Cloudstream/builds/DiziYou.cs3",
+        "name": "DiziYou"
+    },
+    {
+        "iconUrl": "https://rectvapk.cc/favicon.ico",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/Amiqo09/Diziyou-Cloudstream",
+        "fileSize": 14971,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "yusiqo",
+            "keyiflerolsun"
+        ],
+        "tvTypes": [
+            "Movie"
+        ],
+        "version": 1,
+        "internalName": "RecTV",
+        "description": "\u00dc\u015fenmeden Rectv Den Canl\u0131 olarak film dizi \u00e7eken eklenti, lordun elinden",
+        "url": "https://raw.githubusercontent.com/Amiqo09/Diziyou-Cloudstream/builds/RecTV.cs3",
+        "name": "RecTV"
+    }
+]
