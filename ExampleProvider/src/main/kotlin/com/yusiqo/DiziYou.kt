@@ -101,26 +101,24 @@ class DiziYou : MainAPI() {
 
   override suspend fun search(query: String): List<SearchResponse> {
     val responseRaw = app.post(
-      "https://www.diziyou.co/wp-admin/admin-ajax.php",
-      headers = mapOf(
-        "Content-Type" to "application/x-www-form-urlencoded; charset=UTF-8",
-        "Accept" to "*/*",
-        "X-Requested-With" to "XMLHttpRequest",
-        "User-Agent" to "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36",
-        "Referer" to "https://www.diziyou.co/elite24/"
-      ),
-      data = mapOf(
-        "action" to "data_fetch",
-        "keyword" to query
-      )
+        "https://www.diziyou.co/wp-admin/admin-ajax.php",
+        headers = mapOf(
+            "Content-Type" to "application/x-www-form-urlencoded; charset=UTF-8",
+            "Accept" to "*/*",
+            "X-Requested-With" to "XMLHttpRequest",
+            "User-Agent" to "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36",
+            "Referer" to "https://www.diziyou.co/elite24/"
+        ),
+        data = mapOf(
+            "action" to "data_fetch",
+            "keyword" to query
+        )
     )
 
     val sonuc = responseRaw.document
 
-
-    return sonuc.select("div.searchelement").mapNotNull { it.toSearchResult() }
-    
-  }
+    return sonuc.select("div.searchelement").mapNotNull { it.toPostSearchResult() }
+}
 
   override suspend fun quickSearch(query: String): List<SearchResponse> = search(query)
 
