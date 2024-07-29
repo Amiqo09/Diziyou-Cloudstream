@@ -89,7 +89,7 @@ class DiziYou : MainAPI() {
   }
 
   private fun Element.toPostSearchResult(): SearchResponse? {
-    val title     = document.selectFirst("div.search-cat-img ~ a")?.text() ?: return null
+    val title     = this.selectFirst("div.search-cat-img ~ a")?.text() ?: return null
     val href      = fixUrlNull(this.selectFirst("a")?.attr("href")) ?: return null
     val posterUrl = fixUrlNull(this.selectFirst("img")?.attr("src"))
 
@@ -115,10 +115,9 @@ class DiziYou : MainAPI() {
         )
     )
 
-    val htmlContent = responseRaw.body.string()
-    val document = Jsoup.parse(htmlContent)
+    val sonuc = responseRaw.document
 
-    return document.select("div.searchelement").mapNotNull { it.toPostSearchResult() }
+    return sonuc.select("div.searchelement").mapNotNull { it.toPostSearchResult() }
 }
 
   override suspend fun quickSearch(query: String): List<SearchResponse> = search(query)
