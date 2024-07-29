@@ -118,7 +118,7 @@ class DiziYou : MainAPI() {
     override suspend fun load(url: String): LoadResponse? {
         val document = app.get(url, interceptor = interceptor).document
 
-        val poster      = fixUrlNull(document.selectFirst("[property='og:image']")?.attr("content"))
+        val poster      = fixUrlNull(document.selectFirst("div.category_image img")?.attr("src"))
         val year        = document.selectXpath("//div[text()='Yapım Yılı']//following-sibling::div").text().trim().toIntOrNull()
         val description = document.selectFirst("div.summary p")?.text()?.trim()
         val tags        = document.selectXpath("//div[text()='Türler']//following-sibling::div").text().trim().split(" ").mapNotNull { it.trim() }
@@ -167,49 +167,16 @@ class DiziYou : MainAPI() {
     override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
         Log.d("DZP", "data » ${data}")
         val document = app.get(data, interceptor = interceptor).document
-        val iframe   = document.selectFirst(".series-player-container iframe")?.attr("src") ?: document.selectFirst("div#vast_new iframe")?.attr("src") ?: return false
+        val iframe   = document.selectFirst("iframe")?.attr("src") ?: document.selectFirst("iframe")?.attr("src") ?: return false
+        val rakam = iframe.filter { it.isDigit() }
         Log.d("DZP", "iframe » ${iframe}")
-
-        val iSource = app.get("${iframe}", referer="${mainUrl}/").text
-        val m3uLink = Regex("""file:\"([^\"]+)""").find(iSource)?.groupValues?.get(1)
-        if (m3uLink == null) {
-            Log.d("DZP", "iSource » ${iSource}")
-            return loadExtractor(iframe, "${mainUrl}/", subtitleCallback, callback)
-        }
-
-        val subtitles = Regex("""\"subtitle":\"([^\"]+)""").find(iSource)?.groupValues?.get(1)
-        if (subtitles != null) {
-            if (subtitles.contains(",")) {
-                subtitles.split(",").forEach {
-                    val subLang = it.substringAfter("[").substringBefore("]")
-                    val subUrl  = it.replace("[${subLang}]", "")
-
-                    subtitleCallback.invoke(
-                        SubtitleFile(
-                            lang = subLang,
-                            url  = fixUrl(subUrl)
-                        )
-                    )
-                }
-            } else {
-                val subLang = subtitles.substringAfter("[").substringBefore("]")
-                val subUrl  = subtitles.replace("[${subLang}]", "")
-
-                subtitleCallback.invoke(
-                    SubtitleFile(
-                        lang = subLang,
-                        url  = fixUrl(subUrl)
-                    )
-                )
-            }
-        }
 
         callback.invoke(
             ExtractorLink(
                 source  = this.name,
                 name    = this.name,
                 url     = m3uLink,
-                referer = "${mainUrl}/",
+                referer = "https://storage.diziyou.co/episodes/${rakam}_tr/play.m3u8",
                 quality = Qualities.Unknown.value,
                 isM3u8  = true
             )
