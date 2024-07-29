@@ -145,7 +145,7 @@ val episodes = document.select("//div[@id='butonlar']/button").mapNotNull {
     val epHref = fixUrlNull(it.selectFirst("//a")?.attr("href")) ?: return@mapNotNull null
     val epEpisode = it.selectFirst("//div[@id='butonlar']/button")?.text()?.trim()?.split(" ")?.get(1)?.replace(".", "")?.toIntOrNull()
     val epSeason = it.selectFirst("//div[@id='butonlar']/button")?.text()?.trim()?.split(" ")?.get(0)?.replace(".", "")?.toIntOrNull()
-}
+
       Episode(
         data = epHref,
         name = epName,
