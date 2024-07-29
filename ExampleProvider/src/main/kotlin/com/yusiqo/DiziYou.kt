@@ -88,7 +88,7 @@ class DiziYou : MainAPI() {
     }
   }
 
-  private fun Element.toPostSearchResult(): SearchResponse {
+  private fun Element.toPostSearchResult(): SearchResponse? {
     val title     = document.selectFirst("div.search-cat-img ~ a")?.text() ?: return null
     val href      = fixUrlNull(this.selectFirst("a")?.attr("href")) ?: return null
     val posterUrl = fixUrlNull(this.selectFirst("img")?.attr("src"))
