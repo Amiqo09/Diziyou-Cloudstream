@@ -117,7 +117,7 @@ class DiziYou : MainAPI() {
 
     val sonuc = responseRaw.document
 
-    return sonuc.select("div.searchelement").mapNotNull { it.toPostSearchResult() }
+    return sonuc.select("div#searchelement").mapNotNull { it.toPostSearchResult() }
 }
 
   override suspend fun quickSearch(query: String): List<SearchResponse> = search(query)
