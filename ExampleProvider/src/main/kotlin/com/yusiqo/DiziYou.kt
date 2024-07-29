@@ -89,9 +89,10 @@ class DiziYou : MainAPI() {
   }
 
   private fun SearchItem.toPostSearchResult(): SearchResponse {
-    val title = this.title
-    val href = "${mainUrl}${this.url}"
-    val posterUrl = this.poster
+    val title     = document.selectFirst("div.search-cat-img ~ a")?.text() ?: return null
+    val href      = fixUrlNull(this.selectFirst("a")?.attr("href")) ?: return null
+    val posterUrl = fixUrlNull(this.selectFirst("img")?.attr("src"))
+
     return newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
       this.posterUrl = posterUrl
     }
@@ -100,27 +101,25 @@ class DiziYou : MainAPI() {
 
   override suspend fun search(query: String): List<SearchResponse> {
     val responseRaw = app.post(
-      "${mainUrl}/api/search-autocomplete",
+      "https://www.diziyou.co/wp-admin/admin-ajax.php",
       headers = mapOf(
-        "Accept" to "application/json, text/javascript, */*; q=0.01",
-        "X-Requested-With" to "XMLHttpRequest"
+        "Content-Type" to "application/x-www-form-urlencoded; charset=UTF-8",
+        "Accept" to "*/*",
+        "X-Requested-With" to "XMLHttpRequest",
+        "User-Agent" to "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36",
+        "Referer" to "https://www.diziyou.co/elite24/"
       ),
-      referer = "${mainUrl}/",
-      interceptor = interceptor,
       data = mapOf(
-        "query" to query
+        "action" to "data_fetch",
+        "keyword" to query
       )
     )
 
-    val searchItemsMap = jacksonObjectMapper().readValue<Map<String, SearchItem>>(responseRaw.text)
+    val sonuc = responseRaw.document
 
-    val searchResponses = mutableListOf<SearchResponse>()
 
-    for ((key, searchItem) in searchItemsMap) {
-      searchResponses.add(searchItem.toPostSearchResult())
-    }
-
-    return searchResponses
+    return sonuc.select("div.searchelement").mapNotNull { it.toSearchResult() }
+    
   }
 
   override suspend fun quickSearch(query: String): List<SearchResponse> = search(query)
