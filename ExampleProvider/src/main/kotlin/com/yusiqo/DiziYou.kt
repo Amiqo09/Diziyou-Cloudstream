@@ -55,7 +55,7 @@ class DiziYou : MainAPI() {
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val document = app.get(request.data, interceptor = interceptor).document
-        val home     = document.select("div.seriescontent").mapNotNull { it.diziler() }
+        val home     = document.select("div.single-item").mapNotNull { it.diziler() }
         return newHomePageResponse(request.name, home, hasNext=false)
     }
 
@@ -73,9 +73,9 @@ class DiziYou : MainAPI() {
     }
 
     private fun Element.diziler(): SearchResponse? {
-        val title     = this.selectFirst("div.single-item a")?.text() ?: return null
-        val href      = fixUrlNull(this.selectFirst("div.single-item a")?.attr("href")) ?: return null
-        val posterUrl = fixUrlNull(this.selectFirst("div.single-item img")?.attr("src"))
+        val title     = this.selectFirst("a")?.text() ?: return null
+        val href      = fixUrlNull(this.selectFirst("a")?.attr("href")) ?: return null
+        val posterUrl = fixUrlNull(this.selectFirst("img")?.attr("src"))
 
         return newTvSeriesSearchResponse(title, href, TvType.TvSeries) { this.posterUrl = posterUrl }
     }
