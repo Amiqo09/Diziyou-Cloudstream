@@ -1,0 +1,8 @@
+{
+    "name": "Türkçe Eklentiler | Lordun elinden",
+    "description": "Türkçe içerikli eklenti havuzu @yusiqo yaptı",
+    "manifestVersion": 1,
+    "pluginLists": [
+      "https://raw.githubusercontent.com/Amiqo09/Diziyou-Cloudstream/builds/plugins.json"
+    ]
+}
