@@ -55,7 +55,7 @@ class DiziYou : MainAPI() {
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val document = app.get(request.data, interceptor = interceptor).document
-        val home     = document.select("div.episode-item").mapNotNull { it.diziler() }
+        val home     = document.select("div.seriescontent").mapNotNull { it.diziler() }
         return newHomePageResponse(request.name, home, hasNext=false)
     }
 
