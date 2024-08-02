@@ -63,21 +63,19 @@ class Rectv : MainAPI() {
     val searchItemsList = jacksonObjectMapper().readValue<List<SearchItem>>(veri)
 
     val home = searchItemsList.mapNotNull {
-        it.diziler()
+        it.film()
     }
 
     return newHomePageResponse(request.name, home, hasNext = false)
   }
 
 
-  private fun SearchItem.diziler(): SearchResponse? {
+  private fun Element.film(): SearchResponse? {
     val title = this.title ?: return null
     val href = fixUrlNull(this.id) ?: return null
     val posterUrl = fixUrlNull(this.image)
 
-    return newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
-      this.posterUrl = posterUrl
-    }
+    return newMovieSearchResponse(title, href, TvType.Movie) { this.posterUrl = posterUrl }
   }
 
   private fun Element.toPostSearchResult(): SearchResponse? {
