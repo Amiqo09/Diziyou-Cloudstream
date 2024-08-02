@@ -11,7 +11,6 @@ data class SearchItem(
   @JsonProperty("tr_title") val trTitle: String,
   @JsonProperty("image") val image: String,
   @JsonProperty("poster") val poster: String,
-  @JsonProperty("genres") val genres: String,
   @JsonProperty("imdb") val imdb: String,
   @JsonProperty("duration") val duration: String,
   @JsonProperty("year") val year: String,
