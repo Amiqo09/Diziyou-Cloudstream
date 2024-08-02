@@ -60,10 +60,6 @@ class Rectv : MainAPI() {
 
     val searchResponses = mutableListOf<SearchResponse>()
 
-    for ((key, searchItem) in searchItemsMap) {
-      searchResponses.add(searchItem.toPostSearchResult())
-    }
-    
     val home = searchItemsMap.mapNotNull {
       it.diziler()
     }
