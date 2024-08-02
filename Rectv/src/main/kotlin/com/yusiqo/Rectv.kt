@@ -70,7 +70,7 @@ class Rectv : MainAPI() {
   }
 
 
-  private fun Element.diziler(): SearchResponse? {
+  private fun SearchItem.diziler(): SearchResponse? {
     val title = this.title ?: return null
     val href = fixUrlNull(this.id) ?: return null
     val posterUrl = fixUrlNull(this.image)
