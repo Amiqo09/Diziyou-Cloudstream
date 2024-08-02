@@ -47,6 +47,13 @@ class Rectv : MainAPI() {
   }
 
   override val mainPage = mainPageOf(
+    "${mainUrl}/api/movie/by/filtres/26/created/0/4F5A9C3D9A86FA54EACEDDD635185/c3c5bd17-e37b-4b94-a944-8a3688a30452/" to "Türkçe Dublaj Filmler",
+    "${mainUrl}/api/movie/by/filtres/1/created/0/4F5A9C3D9A86FA54EACEDDD635185/c3c5bd17-e37b-4b94-a944-8a3688a30452/" to "Aksiyon Filmleri",
+    "${mainUrl}/api/movie/by/filtres/2/created/0/4F5A9C3D9A86FA54EACEDDD635185/c3c5bd17-e37b-4b94-a944-8a3688a30452/" to "Dram Filmleri",
+    "${mainUrl}/api/movie/by/filtres/3/created/0/4F5A9C3D9A86FA54EACEDDD635185/c3c5bd17-e37b-4b94-a944-8a3688a30452/" to "Komedi Filmler",
+    "${mainUrl}/api/movie/by/filtres/4/created/0/4F5A9C3D9A86FA54EACEDDD635185/c3c5bd17-e37b-4b94-a944-8a3688a30452/" to "Bilim Kurgu Filmler",
+    "${mainUrl}/api/movie/by/filtres/5/created/0/4F5A9C3D9A86FA54EACEDDD635185/c3c5bd17-e37b-4b94-a944-8a3688a30452/" to "Romantik Filmler",
+    "${mainUrl}/api/movie/by/filtres/8/created/0/4F5A9C3D9A86FA54EACEDDD635185/c3c5bd17-e37b-4b94-a944-8a3688a30452/" to "Korku Filmleri",
     "${mainUrl}/api/movie/by/filtres/0/created/0/4F5A9C3D9A86FA54EACEDDD635185/c3c5bd17-e37b-4b94-a944-8a3688a30452/" to "Son Yüklenen Filmler",
   )
 
@@ -62,23 +69,6 @@ class Rectv : MainAPI() {
     return newHomePageResponse(request.name, home, hasNext = false)
   }
 
-
-
-
-
-
-  private suspend fun Element.sonBolumler(): SearchResponse? {
-    val name = this.selectFirst("div.name")?.text() ?: return null
-    val episode = this.selectFirst("div.episode")?.text()?.trim()?.toString()?.replace(". Sezon ", "x")?.replace(". Bölüm", "") ?: return null
-    val title = "${name} ${episode}"
-
-    val href = fixUrlNull(this.selectFirst("a")?.attr("href")) ?: return null
-    val posterUrl = fixUrlNull(this.selectFirst("img")?.attr("src"))
-
-    return newTvSeriesSearchResponse(title, href.substringBefore("/sezon"), TvType.TvSeries) {
-      this.posterUrl = posterUrl
-    }
-  }
 
   private fun SearchItem.diziler(): SearchResponse? {
     val title = this.title ?: return null
