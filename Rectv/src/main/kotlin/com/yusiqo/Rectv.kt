@@ -1,5 +1,3 @@
-// ! Kekik yapmadiği için yusiqo tarafindan yapıldı
-
 package com.yusiqo
 
 import android.util.Log
@@ -25,8 +23,6 @@ class Rectv : MainAPI() {
 
   // ! CloudFlare bypass
   override var sequentialMainPage = true // * https://recloudstream.github.io/dokka/-cloudstream/com.lagradost.cloudstream3/-main-a-p-i/index.html#-2049735995%2FProperties%2F101969414
-  // override var sequentialMainPageDelay       = 250L // ? 0.25 saniye
-  // override var sequentialMainPageScrollDelay = 250L // ? 0.25 saniye
 
   // ! CloudFlare v2
   private val cloudflareKiller by lazy {
@@ -54,20 +50,27 @@ class Rectv : MainAPI() {
     "${mainUrl}/api/movie/by/filtres/0/created/0/4F5A9C3D9A86FA54EACEDDD635185/c3c5bd17-e37b-4b94-a944-8a3688a30452/" to "Son Yüklenen Filmler",
   )
 
+  data class SearchItem(
+      val title: String?,
+      val id: String?,
+      val image: String?
+  )
+
   override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
     val veri = app.get(request.data, interceptor = interceptor).text
-    val searchItemsMap = jacksonObjectMapper().readValue<Map<String, SearchItem>>(veri)
+    val searchItemsList = jacksonObjectMapper().readValue<List<SearchItem>>(veri)
 
-    val searchResponses = mutableListOf<SearchResponse>()
-
-    val home = searchItemsMap.mapNotNull {
-      it.diziler()
+    val home = searchItemsList.mapNotNull {
+        it.diziler()
     }
 
-
-
-    return newHomePageResponse(request.name, home, hasNext=false)
+    return newHomePageResponse(request.name, home, hasNext = false)
   }
+
+
+
+
+
 
   private suspend fun Element.sonBolumler(): SearchResponse? {
     val name = this.selectFirst("div.name")?.text() ?: return null
@@ -82,7 +85,7 @@ class Rectv : MainAPI() {
     }
   }
 
-  private fun Element.diziler(): SearchResponse? {
+  private fun SearchItem.diziler(): SearchResponse? {
     val title = this.title ?: return null
     val href = fixUrlNull(this.id) ?: return null
     val posterUrl = fixUrlNull(this.image)
