@@ -14,8 +14,8 @@ import okhttp3.Response
 import org.jsoup.Jsoup
 
 class Rectv : MainAPI() {
-  override var mainUrl = "https://diziyou.co"
-  override var name = "DiziYou @Yusiqo"
+  override var mainUrl = "https://m.rectv1244.xyz"
+  override var name = "Rectv @Yusiqo"
   override val hasMainPage = true
   override var lang = "tr"
   override val hasQuickSearch = true
@@ -51,17 +51,25 @@ class Rectv : MainAPI() {
   }
 
   override val mainPage = mainPageOf(
-    "${mainUrl}/dizi-arsivi/?tur=Komedi" to "Komedi Dizileri",
-    "${mainUrl}/dizi-arsivi/?tur=Bilim+Kurgu" to "Bilim Kurgu Dizileri",
-    "${mainUrl}/dizi-arsivi/?tur=Aksiyon" to "Aksiyon Dizileri",
-    "${mainUrl}/dizi-arsivi/?tur=Korku" to "Korku Dizileri",
+    "${mainUrl}/api/movie/by/filtres/0/created/0/4F5A9C3D9A86FA54EACEDDD635185/c3c5bd17-e37b-4b94-a944-8a3688a30452/" to "Son Yüklenen Filmler",
   )
 
   override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-    val document = app.get(request.data, interceptor = interceptor).document
-    val home = document.select("div.single-item").mapNotNull {
+    val veri = app.get(request.data, interceptor = interceptor).text
+    val searchItemsMap = jacksonObjectMapper().readValue<Map<String, SearchItem>>(veri)
+
+    val searchResponses = mutableListOf<SearchResponse>()
+
+    for ((key, searchItem) in searchItemsMap) {
+      searchResponses.add(searchItem.toPostSearchResult())
+    }
+    
+    val home = searchItemsMap.mapNotNull {
       it.diziler()
     }
+
+
+
     return newHomePageResponse(request.name, home, hasNext=false)
   }
 
@@ -79,9 +87,9 @@ class Rectv : MainAPI() {
   }
 
   private fun Element.diziler(): SearchResponse? {
-    val title = this.selectFirst("a")?.text() ?: return null
-    val href = fixUrlNull(this.selectFirst("a")?.attr("href")) ?: return null
-    val posterUrl = fixUrlNull(this.selectFirst("img")?.attr("src"))
+    val title = this.title ?: return null
+    val href = fixUrlNull(this.id) ?: return null
+    val posterUrl = fixUrlNull(this.image)
 
     return newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
       this.posterUrl = posterUrl
@@ -89,8 +97,8 @@ class Rectv : MainAPI() {
   }
 
   private fun Element.toPostSearchResult(): SearchResponse? {
-    val title     = this.selectFirst("div.search-cat-img ~ a")?.text() ?: return null
-    val href      = fixUrlNull(this.selectFirst("a")?.attr("href")) ?: return null
+    val title = this.selectFirst("div.search-cat-img ~ a")?.text() ?: return null
+    val href = fixUrlNull(this.selectFirst("a")?.attr("href")) ?: return null
     val posterUrl = fixUrlNull(this.selectFirst("img")?.attr("src"))
 
     return newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
@@ -101,24 +109,26 @@ class Rectv : MainAPI() {
 
   override suspend fun search(query: String): List<SearchResponse> {
     val responseRaw = app.post(
-        "https://www.diziyou.co/wp-admin/admin-ajax.php",
-        headers = mapOf(
-            "Content-Type" to "application/x-www-form-urlencoded; charset=UTF-8",
-            "Accept" to "*/*",
-            "X-Requested-With" to "XMLHttpRequest",
-            "User-Agent" to "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36",
-            "Referer" to "https://www.diziyou.co/elite24/"
-        ),
-        data = mapOf(
-            "action" to "data_fetch",
-            "keyword" to query
-        )
+      "https://www.diziyou.co/wp-admin/admin-ajax.php",
+      headers = mapOf(
+        "Content-Type" to "application/x-www-form-urlencoded; charset=UTF-8",
+        "Accept" to "*/*",
+        "X-Requested-With" to "XMLHttpRequest",
+        "User-Agent" to "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36",
+        "Referer" to "https://www.diziyou.co/elite24/"
+      ),
+      data = mapOf(
+        "action" to "data_fetch",
+        "keyword" to query
+      )
     )
 
     val sonuc = responseRaw.document
 
-    return sonuc.select("div#searchelement").mapNotNull { it.toPostSearchResult() }
-}
+    return sonuc.select("div#searchelement").mapNotNull {
+      it.toPostSearchResult()
+    }
+  }
 
   override suspend fun quickSearch(query: String): List<SearchResponse> = search(query)
 
