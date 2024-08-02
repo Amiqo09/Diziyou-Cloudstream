@@ -50,11 +50,6 @@ class Rectv : MainAPI() {
     "${mainUrl}/api/movie/by/filtres/0/created/0/4F5A9C3D9A86FA54EACEDDD635185/c3c5bd17-e37b-4b94-a944-8a3688a30452/" to "Son Yüklenen Filmler",
   )
 
-  data class SearchItem(
-      val title: String?,
-      val id: String?,
-      val image: String?
-  )
 
   override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
     val veri = app.get(request.data, interceptor = interceptor).text
