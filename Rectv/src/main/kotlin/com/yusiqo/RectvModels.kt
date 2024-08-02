@@ -6,12 +6,10 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 
 data class SearchItem(
-  val title: String?,
-  val id: String?,
-  val image: String?,
   @JsonProperty("id") val id: String,
   @JsonProperty("title") val title: String,
   @JsonProperty("tr_title") val trTitle: String,
+  @JsonProperty("image") val image: String,
   @JsonProperty("poster") val poster: String,
   @JsonProperty("genres") val genres: String,
   @JsonProperty("imdb") val imdb: String,
