@@ -1,7 +1,7 @@
-version = 9
+version = 1
 
 cloudstream {
-    authors     = listOf("yusiqo")
+    authors     = listOf("yusiqo", "keyiflerolsun")
     language    = "tr"
     description = "Üşenmeden Rectv Den Canlı olarak film dizi çeken eklenti, lordun elinden"
 
@@ -13,6 +13,6 @@ cloudstream {
      * 3: Beta only
     **/
     status  = 1 // will be 3 if unspecified
-    tvTypes = listOf("Movie","TvSeries")
+    tvTypes = listOf("Movie")
     iconUrl = "https://rectvapk.cc/favicon.ico"
 }
