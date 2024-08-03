@@ -10,6 +10,8 @@ import com.lagradost.cloudstream3.network.CloudflareKiller
 import okhttp3.Interceptor
 import okhttp3.Response
 import org.jsoup.Jsoup
+import com.fasterxml.jackson.annotation.JsonProperty
+
 
 class Rectv : MainAPI() {
   override var mainUrl = "https://m.rectv1244.xyz"
@@ -71,7 +73,7 @@ class Rectv : MainAPI() {
     for ((key, Detail) in searchItemsMap) {
       cevap.add(Detail.toPostSearchResult())
     }
-    val sonuc= cevap.mapNotNull{
+    val sonuc= cevap.mapNotNull {
       it.filmcek()
     }
 
