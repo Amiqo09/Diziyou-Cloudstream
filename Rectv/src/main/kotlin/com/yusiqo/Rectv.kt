@@ -70,7 +70,7 @@ class Rectv : MainAPI() {
     val cevir = jacksonObjectMapper().readValue<Map<String, SearchItem>>(veri.text)
     val cevap = mutableListOf<SearchResponse>()
 
-    for ((key, Detail) in searchItemsMap) {
+    for ((key, Detail) in cevir) {
       cevap.add(Detail.toPostSearchResult())
     }
     val sonuc= cevap.mapNotNull {
