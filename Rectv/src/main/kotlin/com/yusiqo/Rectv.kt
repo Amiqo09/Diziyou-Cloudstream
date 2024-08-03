@@ -64,6 +64,11 @@ class Rectv : MainAPI() {
     @JsonProperty("image") val image: String = "",
     @JsonProperty("id") val id: String = "",
   )
+  data class SearchItem(
+    val title: String?,
+    val id: String,
+    val image: String?
+  )
 
   override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
     val veri = app.get(request.data, interceptor = interceptor)
