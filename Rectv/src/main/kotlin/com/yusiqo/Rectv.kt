@@ -65,11 +65,18 @@ class Rectv : MainAPI() {
     @JsonProperty("id") val id: String = "",
   )
   data class SearchItem(
-    val title: String?,
-    val id: String,
-    val image: String?
+    @JsonProperty("id") val id: String,
+    @JsonProperty("title") val title: String,
+    @JsonProperty("tr_title") val trTitle: String,
+    @JsonProperty("poster") val poster: String,
+    @JsonProperty("genres") val genres: String,
+    @JsonProperty("imdb") val imdb: String,
+    @JsonProperty("duration") val duration: String,
+    @JsonProperty("year") val year: String,
+    @JsonProperty("view") val view: Int,
+    @JsonProperty("type") val type: String = "defaultType",
+    @JsonProperty("url") val url: String
   )
-
   override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
     val veri = app.get(request.data, interceptor = interceptor)
 
