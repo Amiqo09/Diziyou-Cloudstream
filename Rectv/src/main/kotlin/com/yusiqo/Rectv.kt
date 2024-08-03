@@ -64,6 +64,7 @@ class Rectv : MainAPI() {
     @JsonProperty("image") val image: String = "",
     @JsonProperty("id") val id: String = "",
   )
+
   data class SearchItem(
     val title: String?,
     val id: String,
@@ -72,16 +73,19 @@ class Rectv : MainAPI() {
 
   override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
     val veri = app.get(request.data, interceptor = interceptor)
-    val cevir = jacksonObjectMapper().readValue<Map<String, SearchItem>>(veri.text)
+    val cevir = jacksonObjectMapper().readValue<Map<String, Detail>>(veri.text)
     val cevap = mutableListOf<SearchResponse>()
 
-    for ((key, Detail) in cevir) {
-      cevap.add(SearchItem.filmcek())
+    for ((key, detail) in cevir) {
+      val searchItem = SearchItem(detail.title, detail.id, detail.image)
+      val searchResponse = searchItem.filmcek()
+      if (searchResponse != null) {
+        cevap.add(searchResponse)
+      }
     }
 
     return newHomePageResponse(request.name, cevap, hasNext = false)
   }
-
 
   private fun SearchItem.filmcek(): SearchResponse? {
     val title = this.title ?: return null
