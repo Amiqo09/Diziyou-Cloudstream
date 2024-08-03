@@ -71,13 +71,10 @@ class Rectv : MainAPI() {
     val cevap = mutableListOf<SearchResponse>()
 
     for ((key, Detail) in cevir) {
-      cevap.add(Detail.toPostSearchResult())
-    }
-    val sonuc= cevap.mapNotNull {
-      it.filmcek()
+      cevap.add(SearchItem.filmcek())
     }
 
-    return newHomePageResponse(request.name, sonuc, hasNext = false)
+    return newHomePageResponse(request.name, cevap, hasNext = false)
   }
 
 
@@ -86,7 +83,7 @@ class Rectv : MainAPI() {
     val href = fixUrlNull(this.id) ?: return null
     val posterUrl = fixUrlNull(this.image)
 
-    return newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
+    return newMovieSearchResponse(title, href, TvType.Movie) {
       this.posterUrl = posterUrl
     }
   }
