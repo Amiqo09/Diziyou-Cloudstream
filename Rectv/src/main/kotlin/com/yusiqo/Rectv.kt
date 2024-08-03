@@ -84,8 +84,8 @@ class Rectv : MainAPI() {
 
     val searchResponses = mutableListOf<SearchResponse>()
 
-    for ((key, searchItem) in searchItemsMap) {
-      searchResponses.add(searchItem.filmcek())
+    for ((key, Detail) in searchItemsMap) {
+      searchResponses.add(Detail.filmcek())
     }
 
 
@@ -93,7 +93,7 @@ class Rectv : MainAPI() {
   }
 
 
-  private fun SearchItem.filmcek(): SearchResponse {
+  private fun Detail.filmcek(): SearchResponse {
     val title = this.title ?: return null
     val href = fixUrlNull(this.id) ?: return null
     val posterUrl = fixUrlNull(this.image)
