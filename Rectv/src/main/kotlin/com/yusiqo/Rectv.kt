@@ -71,12 +71,15 @@ class Rectv : MainAPI() {
     for ((key, Detail) in searchItemsMap) {
       cevap.add(Detail.toPostSearchResult())
     }
+    val sonuc= cevap.mapNotNull{
+      it.filmcek()
+    }
 
-    return newHomePageResponse(request.name, cevap, hasNext = false)
+    return newHomePageResponse(request.name, sonuc, hasNext = false)
   }
 
 
-  private fun SearchItem.diziler(): SearchResponse? {
+  private fun SearchItem.filmcek(): SearchResponse? {
     val title = this.title ?: return null
     val href = fixUrlNull(this.id) ?: return null
     val posterUrl = fixUrlNull(this.image)
